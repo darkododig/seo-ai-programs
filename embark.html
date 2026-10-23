@@ -107,6 +107,20 @@
     .modal-tier-level { font-size: 12px; color: var(--text-muted); }
     .modal-tier-row.active-tier .modal-tier-level { color: var(--accent); }
 
+    /* Add-ons */
+    .addon-intro { font-size: 14px; line-height: 1.7; color: var(--text-soft); max-width: 760px; margin-top: -8px; margin-bottom: 24px; }
+    .addon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+    .addon-card { --c: #10b981; position: relative; background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--c); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s; }
+    .addon-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .addon-card:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+    .addon-tier { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c); }
+    .addon-name { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .addon-level { font-size: 12px; color: var(--text-muted); }
+    .addon-price { font-size: 26px; font-weight: 900; color: var(--navy); letter-spacing: -0.02em; margin-top: 4px; }
+    .addon-price span { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0; }
+    .addon-link { margin-top: auto; padding-top: 8px; font-size: 13px; font-weight: 700; color: var(--c); }
+    @media (max-width: 900px) { .addon-grid { grid-template-columns: 1fr; } }
+
     /* Notes */
     .notes { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0; padding: 24px 28px; }
     .notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -386,6 +400,33 @@
       <div class="card-qty">1 hr</div>
     </div>
 
+  </div>
+
+  <p class="section-label">Optional Upgrades</p>
+  <h2 class="section-title">SEO Add-Ons</h2>
+  <p class="addon-intro">Scale your monthly SEO output on top of your base program. Select an add-on to see its full list of deliverables.</p>
+  <div class="addon-grid">
+    <a class="addon-card" href="seo-addon-t1.html" style="--c: #10b981;">
+      <div class="addon-tier">Tier 1 of 3</div>
+      <div class="addon-name">Tier 1 Add-On</div>
+      <div class="addon-level">Low–Medium Competition</div>
+      <div class="addon-price">$800 <span>CAD / mo</span></div>
+      <div class="addon-link">View add-on details &rarr;</div>
+    </a>
+    <a class="addon-card" href="seo-addon-t2.html" style="--c: #06b6d4;">
+      <div class="addon-tier">Tier 2 of 3</div>
+      <div class="addon-name">Tier 2 Add-On</div>
+      <div class="addon-level">Medium–High Competition</div>
+      <div class="addon-price">$1,200 <span>CAD / mo</span></div>
+      <div class="addon-link">View add-on details &rarr;</div>
+    </a>
+    <a class="addon-card" href="seo-addon-t3.html" style="--c: #0d9488;">
+      <div class="addon-tier">Tier 3 of 3</div>
+      <div class="addon-name">Tier 3 Add-On</div>
+      <div class="addon-level">High Competition</div>
+      <div class="addon-price">$1,600 <span>CAD / mo</span></div>
+      <div class="addon-link">View add-on details &rarr;</div>
+    </a>
   </div>
 
   <div class="notes">
