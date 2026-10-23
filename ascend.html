@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCEND — SEO/AI Program | Wisevu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #8b5cf6; --accent-dark: #6d28d9; --accent-light: #f5f3ff;
+      --accent-mid: #a78bfa; --navy: #0f1e2d; --navy-mid: #1a2e42;
+      --gray-bg: #f1f5f9; --gray-line: #dde5ef; --text: #1a2535;
+      --text-soft: #4a5f78; --text-muted: #7a94b0; --white: #ffffff;
+      --gradient: linear-gradient(135deg, #a78bfa, #c4b5fd); --border: #e5e7eb;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--gray-bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* Topbar */
+    .topbar { background: var(--navy); position: sticky; top: 0; z-index: 200; box-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+    .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .topbar-logo img { height: 28px; display: block; }
+    .program-nav { display: flex; gap: 4px; align-items: center; }
+    .program-nav a { text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 16px; border-radius: 6px; color: rgba(255,255,255,0.45); transition: all 0.18s; border: 1px solid transparent; }
+    .program-nav a:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
+    .program-nav a.active { color: #fff; background: var(--accent); border-color: var(--accent-dark); }
+
+    /* Hero */
+    .hero { background: linear-gradient(160deg, #0a1628 0%, #0d2347 45%, #1a3d6e 100%); color: #fff; padding: 80px 32px 72px; text-align: center; position: relative; overflow: hidden; }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+    #neural-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.4); color: #c4b5fd; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; margin-bottom: 20px; }
+    .hero-eyebrow::before { content: ''; display: block; width: 6px; height: 6px; background: #a78bfa; border-radius: 50%; }
+    .tier-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
+    .hero h1 { font-size: clamp(52px, 8vw, 88px); font-weight: 900; letter-spacing: -0.03em; line-height: 0.92; margin-bottom: 18px; color: #fff; }
+    .hero h1 .program-name { background: linear-gradient(135deg, #a78bfa, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .intensity-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.11); border-radius: 100px; padding: 5px 14px 5px 10px; margin-bottom: 28px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.38); letter-spacing: 0.08em; text-transform: uppercase; }
+    .intensity-dot { width: 8px; height: 8px; border-radius: 50%; background: #fbbf24; flex-shrink: 0; box-shadow: 0 0 6px rgba(251,191,36,0.5); }
+    .hero-desc { max-width: 580px; margin: 0 auto 44px; font-size: 15px; line-height: 1.8; color: rgba(255,255,255,0.62); font-weight: 400; }
+    .price-block { display: inline-flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px 52px; backdrop-filter: blur(12px); }
+    .price-amount { font-size: 52px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; color: #fff; }
+    .price-currency { font-size: 24px; font-weight: 600; vertical-align: top; line-height: 1.5; color: rgba(255,255,255,0.65); }
+    .price-period { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 10px; letter-spacing: 0.06em; }
+
+    /* Tier strip */
+    .tier-strip { background: var(--navy-mid); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .tier-strip-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; display: flex; align-items: stretch; }
+    .tier-item { flex: 1; padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-right: 1px solid rgba(255,255,255,0.06); text-decoration: none; cursor: pointer; transition: background 0.15s; }
+    .tier-item:last-child { border-right: none; }
+    .tier-item.current { background: rgba(139,92,246,0.12); }
+    .tier-item:not(.current):hover { background: rgba(255,255,255,0.04); }
+    .tier-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+    .tier-item.current .tier-dot { background: var(--accent); color: #fff; }
+    .tier-item:not(.current) .tier-dot { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); }
+    .tier-info .tier-name { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+    .tier-item.current .tier-name { color: #c4b5fd; }
+    .tier-item:not(.current) .tier-name { color: rgba(255,255,255,0.3); }
+    .tier-info .tier-price { font-size: 12px; }
+    .tier-item.current .tier-price { color: rgba(255,255,255,0.55); }
+    .tier-item:not(.current) .tier-price { color: rgba(255,255,255,0.2); }
+
+    /* Main */
+    main { max-width: 1100px; margin: 0 auto; padding: 56px 32px 96px; }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-title { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1.5px solid var(--gray-line); }
+    .section-desc { font-size: 13px; line-height: 1.7; color: var(--text-soft); max-width: 780px; margin-top: -14px; margin-bottom: 32px; font-style: italic; }
+
+    /* Card grid */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.18s, border-color 0.18s; }
+    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: rgba(139,92,246,0.3); }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(196,181,253,0.12)); flex-shrink: 0; }
+    .card-icon svg { width: 22px; height: 22px; color: #8b5cf6; }
+    .info-btn { background: none; border: 1px solid var(--gray-line); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.15s; flex-shrink: 0; }
+    .info-btn:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+    .info-btn svg { width: 14px; height: 14px; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.35; }
+    .card-qty { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.03em; padding: 3px 10px; border-radius: 8px; background-image: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; box-shadow: inset 0 0 0 200px rgba(139,92,246,0.09); width: fit-content; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,22,40,0.72); backdrop-filter: blur(4px); z-index: 500; align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay.open { display: flex; }
+    .modal-card { background: var(--white); border-radius: 20px; padding: 36px; max-width: 540px; width: 100%; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.28); animation: modalIn 0.2s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: var(--gray-bg); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+    .modal-close:hover { background: var(--gray-line); color: var(--text); }
+    .modal-close svg { width: 16px; height: 16px; }
+    .modal-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(196,181,253,0.12)); margin-bottom: 14px; }
+    .modal-icon svg { width: 24px; height: 24px; color: #8b5cf6; }
+    .modal-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 6px; line-height: 1.3; padding-right: 32px; }
+    .modal-qty { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 8px; background-image: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; box-shadow: inset 0 0 0 200px rgba(139,92,246,0.09); margin-bottom: 20px; width: fit-content; }
+    .modal-divider { height: 1px; background: var(--gray-line); margin-bottom: 20px; }
+    .modal-desc { font-size: 13.5px; line-height: 1.8; color: var(--text-soft); }
+    .modal-desc p { margin-bottom: 12px; }
+    .modal-desc p:last-child { margin-bottom: 0; }
+    .modal-desc strong { color: var(--text); font-weight: 600; }
+    .modal-desc em { font-style: italic; color: var(--text-muted); }
+    .modal-desc ul { margin: 6px 0 14px 18px; display: flex; flex-direction: column; gap: 4px; }
+    .modal-tier-grid { display: flex; flex-direction: column; gap: 6px; margin: 12px 0 16px; }
+    .modal-tier-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-radius: 8px; background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.12); }
+    .modal-tier-row.active-tier { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3); }
+    .modal-tier-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .modal-tier-row.active-tier .modal-tier-name { color: var(--accent-dark); }
+    .modal-tier-level { font-size: 12px; color: var(--text-muted); }
+    .modal-tier-row.active-tier .modal-tier-level { color: var(--accent); }
+
+    /* Notes */
+    .notes { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0; padding: 24px 28px; }
+    .notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .notes p { font-size: 14px; line-height: 1.75; color: var(--text-soft); margin-bottom: 12px; }
+    .notes p:last-child { margin-bottom: 0; }
+    .notes strong { color: var(--text); font-weight: 600; }
+
+    /* Footer */
+    footer { background: #f1f5f9; text-align: center; padding: 24px; font-size: 12px; color: var(--text-muted); }
+    footer a { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) {
+      .topbar-inner { padding: 0 20px; } .hero { padding: 60px 20px 52px; }
+      .tier-strip-inner { padding: 0; overflow-x: auto; } .tier-item { padding: 12px 14px; min-width: 110px; }
+      .program-nav { display: none; } .grid { grid-template-columns: 1fr; }
+      main { padding: 40px 20px 60px; } .modal-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-logo" href="https://www.wisevu.com">
+      <img src="https://www.wisevu.com/wp-content/uploads/2020/10/wisevu-web-design-and-seo-light.svg" alt="Wisevu" />
+    </a>
+    <div class="program-nav">
+      <a href="embark.html">Embark</a>
+      <a href="ascend.html" class="active">Ascend</a>
+      <a href="thrive.html">Thrive</a>
+      <a href="triumph.html">Triumph</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <canvas id="neural-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">SEO / AI Search Program Overview</div>
+    <p class="tier-label">Tier 2 of 4</p>
+    <h1><span class="program-name">Ascend</span></h1>
+    <div class="intensity-badge"><span class="intensity-dot"></span>Medium–High Competition</div>
+    <p class="hero-desc">Powered by Wisevu’s proprietary SEO and AI optimization frameworks, Ascend is designed for brands ready to compete against established competitors in medium- to high-competition markets. It combines deeper content strategies, advanced optimization, and stronger authority building to accelerate visibility and drive sustainable growth across traditional and AI-generated search results.</p>
+    <div class="price-block">
+      <div class="price-amount"><span class="price-currency">$</span>3,000</div>
+      <div class="price-period">CAD &nbsp;/&nbsp; month</div>
+    </div>
+  </div>
+</section>
+
+<div class="tier-strip">
+  <div class="tier-strip-inner">
+    <a href="embark.html" class="tier-item">
+      <div class="tier-dot">1</div>
+      <div class="tier-info"><div class="tier-name">Embark</div><div class="tier-price">$2,000 CAD / mo</div></div>
+    </a>
+    <a href="ascend.html" class="tier-item current">
+      <div class="tier-dot">2</div>
+      <div class="tier-info"><div class="tier-name">Ascend</div><div class="tier-price">$3,000 CAD / mo</div></div>
+    </a>
+    <a href="thrive.html" class="tier-item">
+      <div class="tier-dot">3</div>
+      <div class="tier-info"><div class="tier-name">Thrive</div><div class="tier-price">$4,000 CAD / mo</div></div>
+    </a>
+    <a href="triumph.html" class="tier-item">
+      <div class="tier-dot">4</div>
+      <div class="tier-info"><div class="tier-name">Triumph</div><div class="tier-price">$5,000 CAD / mo</div></div>
+    </a>
+  </div>
+</div>
+
+<main>
+  <p class="section-label">What's Included</p>
+  <h2 class="section-title">Monthly Deliverables</h2>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12L12 7M4 12L12 17M12 7L20 12M12 17L20 12" stroke-width="1.5"/>
+            <circle cx="4" cy="12" r="2"/>
+            <circle cx="12" cy="7" r="2"/>
+            <circle cx="12" cy="17" r="2"/>
+            <circle cx="20" cy="12" r="2"/>
+          </svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card1')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Wisevu&trade; Exclusive SEO &amp; AI Programming</div>
+      <div class="card-qty">x1&ndash;3 core treatments/categories</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card2')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">New Authority Content Development</div>
+      <div class="card-qty">x2 pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card3')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Existing Content SEO &amp; AI Search Optimization</div>
+      <div class="card-qty">x1–2 target pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card5')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Keyword Optimization &amp; A/B Testing</div>
+      <div class="card-qty">x2 target pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card6')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Meta Tag &amp; Structured Schema Optimization</div>
+      <div class="card-qty">x2 target pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card7')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Internal Architecture &amp; Authority Flow Optimization</div>
+      <div class="card-qty">x2 target pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card8')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Core Web Vitals &amp; Technical SEO Optimization</div>
+      <div class="card-qty">x1&ndash;2 target pages</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card4')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">GBP &amp; Bing Places Optimization</div>
+      <div class="card-qty">x1 location</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card13')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Brand Citations / Author Authority Optimization</div>
+      <div class="card-qty">x2</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card9')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Digital PR Outreach Tier 1 Backlinks</div>
+      <div class="card-qty">x2&ndash;3</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card10')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Supporting Tier 2 Backlinks</div>
+      <div class="card-qty">x15</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card11')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Authority Protection &amp; SEO Integrity Maintenance</div>
+      <div class="card-qty">x1</div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card15')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Advanced Analytics &amp; ROI Tracking</div>
+      <div class="card-qty">Monthly</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card16')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Competitive Intelligence &amp; Opportunity Monitoring</div>
+      <div class="card-qty">Monthly</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"/></svg>
+        </div>
+        <button class="info-btn" onclick="openModal(this,'card12')" aria-label="Learn more">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+      <div class="card-title">Monthly Strategy Call</div>
+      <div class="card-qty">1 hr</div>
+    </div>
+
+  </div>
+
+  <div class="notes">
+    <p class="notes-label">Important Program Notes</p>
+    <p><strong>Strategic Reallocation:</strong> Where campaign data indicates that another included SEO/AI initiative offers materially greater growth potential, Wisevu may strategically reallocate equivalent optimization resources between deliverables. This flexibility allows the program to respond to ranking opportunities, algorithm changes and competitive conditions rather than rigidly performing lower-impact work.</p>
+    <p><strong>Delivery &amp; Reporting:</strong> Deliverables are due monthly and/or quarterly. Deliverables affected by publisher timelines, client approvals, third-party dependencies or other factors outside Wisevu's reasonable control may roll forward and be completed during a subsequent reporting period.</p>
+    <p><strong>Proprietary Systems:</strong> Clients receive reporting on link building and content initiatives. Our additional SEO/LLM systems and optimization methodologies are proprietary and designed to maximize results &mdash; these internal frameworks remain confidential as part of the unique process that drives consistent rankings and growth.</p>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Wisevu &nbsp;&middot;&nbsp; <a href="https://www.wisevu.com">wisevu.com</a></p>
+</footer>
+
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-qty" id="modal-qty"></div>
+    <div class="modal-divider"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+  </div>
+</div>
+
+<script>
+var popupData = {
+  card1: {
+    title: "Wisevu™ Exclusive SEO & AI Programming",
+    qty: "x1–3 core treatments/categories",
+    desc: '<p>Each base program covers 1–2 treatments or categories in one location, at a specific competition level.</p><div class="modal-tier-grid"><div class="modal-tier-row"><span class="modal-tier-name">Embark</span><span class="modal-tier-level">Low–Medium Competition</span></div><div class="modal-tier-row active-tier"><span class="modal-tier-name">Ascend</span><span class="modal-tier-level">Medium–High Competition</span></div><div class="modal-tier-row"><span class="modal-tier-name">Thrive</span><span class="modal-tier-level">High Competition</span></div><div class="modal-tier-row"><span class="modal-tier-name">Triumph</span><span class="modal-tier-level">Ultra-High Competition</span></div></div><p><strong>Your base program establishes the foundation:</strong></p><ul><li>SEO/AI Optimization strategy tailored to your market</li><li>Authority building at the scale required for your competition level</li><li>Optimization to ensure visibility in your chosen location/market</li></ul><p>Ascend is best for brands targeting 1–2 products/services/treatments or categories in a medium → high competition market.</p><p><em>Wisevu SEO &amp; AI optimization methodologies are proprietary and designed to maximize results &mdash; these internal frameworks remain confidential as part of the unique process that drives consistent rankings and growth.</em></p>'
+  },
+  card2: {
+    title: "New Authority Content Development",
+    qty: "x2 pages",
+    desc: "<p>Each month, we analyze your competitors, search results and industry benchmarks to identify the highest-impact content opportunities for your practice. Our industry-experienced writers and SEO specialists then create authoritative pages designed to outperform competing content and strengthen your topical authority.</p><p>Every page is strategically optimized to be favoured by both traditional search engine algorithms and AI/LLM models, while incorporating strong user experience and conversion-focused copywriting to turn more visitors into patients.</p><p><em>May be substituted with existing content optimization where strategically appropriate. Each Wisevu-published guest post or editorial counts toward the Client's monthly New Content deliverables.</em></p>"
+  },
+  card3: {
+    title: "Existing Content SEO & AI Search Optimization",
+    qty: "x1–2 target pages",
+    desc: "<p>Every month, we identify the page(s) on your website most in need of attention and strategically optimize them to improve visibility across both traditional Google search and AI-powered search.</p><p>Using competitive search and AI visibility analysis, we evaluate how leading content is structured, what information is being surfaced, and which sources AI search engines favour when generating answers. Our specialists then improve each page's content depth, structure, relevance, trust signals, and technical presentation to make it easier for Google and AI search engines to understand, trust, surface, and cite.</p><p>This goes beyond traditional SEO. It requires strategic marketing expertise combined with a technical understanding of how modern search and AI platforms discover, interpret, compare, and recommend practices and medical information.</p><p><em>May be substituted with new content development where strategically appropriate.</em></p>"
+  },
+  card4: {
+    title: "GBP & Bing Places Optimization",
+    qty: "x1 location",
+    desc: "<p>Your Google Business Profile is often the first impression a prospective patient has of your practice — but it isn't the only one that matters. Each month we optimize both your Google Business Profile and your Bing Places for Business listing to maximize visibility across every major local search surface.</p><p>On both platforms we review and update service and treatment listings, specialties, photos, posts, Q&amp;A, and review response strategy. We also ensure your profile signals stay consistent with your website and citation network, reinforcing your local authority across search engines.</p><p>Bing reaches a significant and often overlooked audience: older demographics using Windows computers with Bing set as the default search engine out of the box. Maintaining an accurate Bing Places presence strengthens your practice's visibility and entity consistency across Microsoft's search ecosystem and provides another authoritative source through which search engines and AI-powered discovery systems can understand your practice. Optimizing both platforms is one of the highest-ROI local search investments available to medical practices.</p><p><em>Each base program includes optimization for one primary practice location. Additional locations may be added as an upgrade.</em></p>"
+  },
+  card13: {
+    title: "Brand Citations / Author Authority Optimization",
+    qty: "x2",
+    desc: "<p>We build and optimize brand citations across authoritative directories, industry platforms, and data aggregators to reinforce your business's online presence and NAP (Name, Address, Phone) consistency — a key trust signal for both traditional search engines and AI platforms.</p><p>In parallel, we strengthen author authority by establishing or optimizing author profiles, bylines, and expert credentials across relevant platforms. This signals E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) to Google and increases the likelihood of your brand and team being cited or referenced in AI-generated search results.</p><p><em>The number of citations or author authority initiatives delivered each month may vary based on strategic priorities and available opportunities.</em></p>"
+  },
+  card5: {
+    title: "Keyword Optimization & A/B Testing",
+    qty: "x2 target pages",
+    desc: "<p>We analyze large keyword datasets, competitor gaps and emerging search patterns to uncover high-value opportunities — including high-volume searches, low-hanging quick wins, and conversational queries increasingly used across AI-powered search.</p><p>We then optimize each target page and continuously test and refine key elements month over month, including keyword targeting, headlines, content structure and search positioning. By analyzing performance and applying what we learn to the next round of optimization, we can identify what is working, what isn't, and where further improvements can be made.</p><p>This ongoing cycle of analysis, testing and refinement allows us to continually improve performance rather than relying on a one-time optimization.</p>"
+  },
+  card6: {
+    title: "Meta Tag & Structured Schema Optimization",
+    qty: "x2 target pages",
+    desc: "<p>Using large-scale search data, advanced AI systems and expert human oversight, we continuously A/B test and refine meta data to identify the strongest-performing variations — not only for individual keywords, but across entire keyword clusters relevant to your medical practice.</p><p>We also implement structured data markup (including MedicalOrganization, Physician and MedicalSpecialty schema) to help search engines and AI platforms better understand your offerings, strengthen topical relevance, and increase eligibility for rich results and AI-powered discovery.</p>"
+  },
+  card7: {
+    title: "Internal Architecture & Authority Flow Optimization",
+    qty: "x2 target pages",
+    desc: "<p>Using advanced PageRank modelling, we strategically optimize your site structure and internal links to direct authority toward your highest-priority treatment, service and location pages, strengthening their ability to compete for valuable searches.</p><p>We also implement a carefully planned internal linking and anchor-text strategy to strengthen topical relevance, expand keyword coverage, and help Google and AI search engines better understand the relationships between your treatments, services, locations and content — while creating a clearer journey for prospective patients.</p><p>Rather than allowing authority to flow randomly throughout your website, we strategically direct it toward the pages that matter most to your practice's growth.</p>"
+  },
+  card8: {
+    title: "Core Web Vitals & Technical SEO Optimization",
+    qty: "x1–2 target pages",
+    desc: "<p>Our Technical SEO specialists and algorithm experts optimize each selected page to pass Google's Core Web Vitals. These standards assess a page's overall technical performance and user experience under real-world conditions, including how efficiently its content, code, scripts and interactive elements load and function across devices.</p><p>Passing these tests creates a smoother experience for prospective patients while meeting Google's performance expectations for modern sites.</p><p><em>This deliverable may be substituted with another high-priority initiative — such as Meta Tag &amp; Structured Schema Optimization, Keyword Optimization &amp; A/B Testing, Internal Architecture &amp; Authority Flow Optimization, CRO Optimization or Existing Content SEO &amp; AI Search Optimization — where it offers greater potential for SEO and business growth.</em></p>"
+  },
+  card9: {
+    title: "Digital PR Outreach Tier 1 Backlinks",
+    qty: "x2–3",
+    desc: "<p>Wisevu takes a highly strategic, reputation-first approach to building off-site authority. We identify and pursue difficult-to-secure editorial opportunities with reputable publishers, journalists, medical and industry media, webmasters and influencers trusted by patients, search engines and AI/LLM platforms. We complement this outreach with the extensive publisher and webmaster network we have built since 2008, enabling faster prospecting, communication and collaboration.</p><p>Our process combines advanced AI-powered research and outreach with expert human oversight and relationship building. Every opportunity is carefully evaluated for authority, relevance, editorial quality and citation potential before we recommend or pursue it.</p><p>We never rely on low-quality, mass-produced or link-farm placements that could put your brand's reputation at risk. Our focus is premium digital PR that strengthens authority, supports traditional search rankings and increases your potential to be discovered and cited in AI-generated results.</p><p><em>The number of placements is an estimate and may vary based on outreach results, publisher decisions, editorial requirements and publication fees outside Wisevu's control.</em></p>"
+  },
+  card10: {
+    title: "Supporting Tier 2 Backlinks",
+    qty: "x15",
+    desc: "<p>A network of supporting backlinks built to amplify and strengthen the authority of your Tier 1 placements.</p><p>Supporting links strengthen the broader ecosystem surrounding our highest-value editorial placements, helping reinforce topical relevance, discovery and the authority of the content and properties supporting your campaign.</p>"
+  },
+  card11: {
+    title: "Authority Protection & SEO Integrity Maintenance",
+    qty: "x1",
+    desc: "<p>Ongoing monitoring and protection of your domain's authority profile, ensuring the work we build is preserved and defended over time.</p><p>Includes toxic link identification and disavowal, algorithm update impact assessment, and proactive SEO health checks — so that your rankings and authority remain stable as search landscapes evolve.</p>"
+  },
+  card15: {
+    title: "Advanced Analytics & ROI Tracking",
+    qty: "Monthly",
+    desc: "<p>Our analytics team builds and maintains advanced tracking around your SEO program, giving you a clear view of how your search visibility is growing and the business results it generates.</p><p>We continuously track priority keyword positions across Google organic results and the Local Map Pack, while monitoring your brand's visibility and citations across AI-powered search experiences including Google AI Overviews, ChatGPT and Perplexity.</p><p>Most SEO reporting stops at traffic, rankings and impressions. We go further by connecting organic search performance to actual patient leads. Where technically possible, we track phone calls and appointment requests back to organic search and Google Business Profile, helping identify which pages, treatments and search channels are driving patient enquiries.</p><p>Each month, these insights are compiled into a clear performance report that shows what's working, where visibility is growing, and where the greatest opportunities exist for continued growth.</p>"
+  },
+  card16: {
+    title: "Competitive Intelligence & Opportunity Monitoring",
+    qty: "Monthly",
+    desc: "<p>Each month, we monitor your primary local competitors and the broader competitive landscape to understand how your position in the market is changing.</p><p>We identify emerging threats, new opportunities, and shifts in competitor strengths and weaknesses that could impact your search visibility and patient acquisition. These insights are continuously incorporated into your SEO and AI search strategy, helping us prioritize where to defend, where to compete, and where opportunities exist to gain ground.</p><p>When a competitor makes a move, we see it — and adapt your strategy accordingly. The goal is to keep your practice one step ahead rather than reacting after market share has already been lost.</p>"
+  },
+    card12: {
+    title: "Monthly Strategy Call",
+    qty: "1 hr",
+    desc: "<p>A dedicated 1-hour monthly call with your Wisevu search expert to review performance, align on priorities, and plan the month ahead.</p><p>This session connects your patient acquisition data, ranking movements and competitive intelligence to a clear action plan — so every next step is grounded in what's actually happening in your market. Includes a detailed report covering key ranking movements, content performance, and strategic recommendations to keep your program on track toward your growth goals.</p>"
+  }
+};
+
+function openModal(btn, id) {
+  var data = popupData[id];
+  if (!data) return;
+  var card = btn.closest('.card');
+  document.getElementById('modal-icon').innerHTML = card.querySelector('.card-icon').innerHTML;
+  document.getElementById('modal-title').textContent = data.title;
+  document.getElementById('modal-qty').textContent = data.qty;
+  document.getElementById('modal-desc').innerHTML = data.desc;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+/* Neural network canvas — emerald palette */
+(function() {
+  var canvas = document.getElementById('neural-canvas');
+  var ctx = canvas.getContext('2d');
+  function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+  var nodes = [], NODE_COUNT = 72, MAX_DIST = 135;
+  function Node() {
+    this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.22; this.vy = (Math.random() - 0.5) * 0.22;
+    this.r = Math.random() * 1.5 + 0.8; this.alpha = Math.random() * 0.4 + 0.25;
+    this.pulse = Math.random() * Math.PI * 2; this.pulseSpeed = 0.01 + Math.random() * 0.015;
+    this.t = Math.random();
+  }
+  Node.prototype.update = function() {
+    this.x += this.vx; this.y += this.vy; this.pulse += this.pulseSpeed;
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  };
+  Node.prototype.getColor = function(alpha) {
+    var r = Math.round(139 + this.t * (196 - 139));
+    var g = Math.round(92 + this.t * (181 - 92));
+    var b = Math.round(246 + this.t * (253 - 246));
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  };
+  Node.prototype.draw = function() {
+    var pa = this.alpha + Math.sin(this.pulse) * 0.15;
+    var grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 5);
+    grd.addColorStop(0, this.getColor(pa * 0.35)); grd.addColorStop(1, this.getColor(0));
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 5, 0, Math.PI * 2);
+    ctx.fillStyle = grd; ctx.fill();
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.getColor(pa); ctx.fill();
+  };
+  function init() { nodes = []; for (var i = 0; i < NODE_COUNT; i++) nodes.push(new Node()); }
+
+  /* Orion — constellation blended into neural net with gentle drift */
+  function drawConstellation() {
+    var t = Date.now() / 9000;
+    var cx = canvas.width / 2 + Math.sin(t) * 14;
+    var cy = canvas.height * 0.32 + Math.cos(t * 0.65) * 10;
+    var sc = Math.min(canvas.width * 0.32, canvas.height * 0.58);
+
+    var S = {
+      meissa:    { x:  0.00, y: -0.42, r: 1.1, a: 0.40 },
+      betelgeuse:{ x: -0.22, y: -0.20, r: 1.5, a: 0.50 },
+      bellatrix: { x:  0.22, y: -0.20, r: 1.2, a: 0.42 },
+      alnitak:   { x: -0.14, y:  0.06, r: 1.2, a: 0.42 },
+      alnilam:   { x:  0.00, y:  0.08, r: 1.3, a: 0.46 },
+      mintaka:   { x:  0.14, y:  0.06, r: 1.1, a: 0.40 },
+      saiph:     { x: -0.20, y:  0.40, r: 1.1, a: 0.38 },
+      rigel:     { x:  0.26, y:  0.38, r: 1.5, a: 0.52 }
+    };
+
+    var lines = [
+      ['meissa','betelgeuse'], ['meissa','bellatrix'],
+      ['betelgeuse','bellatrix'],
+      ['betelgeuse','alnitak'],
+      ['bellatrix','mintaka'],
+      ['alnitak','alnilam'], ['alnilam','mintaka'],
+      ['alnitak','saiph'],
+      ['mintaka','rigel']
+    ];
+
+    ctx.save();
+    lines.forEach(function(l) {
+      var a = S[l[0]], b = S[l[1]];
+      var ax = cx + a.x * sc, ay = cy + a.y * sc;
+      var bx = cx + b.x * sc, by = cy + b.y * sc;
+      var grad = ctx.createLinearGradient(ax, ay, bx, by);
+      grad.addColorStop(0, 'rgba(139,92,246,' + (a.a * 0.38) + ')');
+      grad.addColorStop(1, 'rgba(196,181,253,' + (b.a * 0.38) + ')');
+      ctx.beginPath();
+      ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+      ctx.strokeStyle = grad; ctx.lineWidth = 0.7; ctx.stroke();
+    });
+
+    Object.keys(S).forEach(function(k) {
+      var s = S[k];
+      var sx = cx + s.x * sc, sy = cy + s.y * sc;
+      var grd = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.r * 5);
+      grd.addColorStop(0, 'rgba(139,92,246,' + (s.a * 0.35) + ')');
+      grd.addColorStop(1, 'rgba(196,181,253,0)');
+      ctx.beginPath(); ctx.arc(sx, sy, s.r * 5, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
+      ctx.beginPath(); ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(196,181,253,' + s.a + ')'; ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    /* Exclusion zone — keep neural net clear of constellation area */
+    var _t = Date.now() / 9000;
+    var ezx = canvas.width / 2 + Math.sin(_t) * 14, ezy = canvas.height * 0.32 + Math.cos(_t * 0.65) * 10;
+    var ezr = Math.min(canvas.width * 0.32, canvas.height * 0.58) * 0.54;
+    function inZone(x, y) { var dx = x - ezx, dy = y - ezy; return dx*dx + dy*dy < ezr*ezr; }
+    for (var i = 0; i < nodes.length; i++) {
+      if (inZone(nodes[i].x, nodes[i].y)) continue;
+      for (var j = i + 1; j < nodes.length; j++) {
+        if (inZone(nodes[j].x, nodes[j].y)) continue;
+        var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MAX_DIST) {
+          var la = (1 - dist / MAX_DIST) * 0.2;
+          var grad = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+          grad.addColorStop(0, nodes[i].getColor(la)); grad.addColorStop(1, nodes[j].getColor(la));
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = grad; ctx.lineWidth = 0.7; ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(function(n) { n.update(); if (!inZone(n.x, n.y)) n.draw(); });
+    drawConstellation();
+    requestAnimationFrame(animate);
+  }
+  resize(); init(); animate();
+  window.addEventListener('resize', function() { resize(); init(); });
+})();
+</script>
+</body>
+</html>
